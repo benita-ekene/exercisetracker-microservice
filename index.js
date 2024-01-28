@@ -41,7 +41,7 @@ app.post("/api/users", async (req, res) => {
   //example: "users" is an object because the model(blue print) is of type object
   const newUser = await User.create(users);
   //////////////newUser.username, newUser,_id, newUse._v can be used to access the different variables attached to newUser//////////////////////
-  res.json({username: newUser.username, id: newUser._id});
+  res.json({username: newUser.username, _id: newUser._id});
   
 });
 
