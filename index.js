@@ -29,6 +29,11 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
+app.get("/api/users", async (req, res) => {
+const allUsers = await User.find({})
+res.json(allUsers)
+})
+
 app.post("/api/users", async (req, res) => {
   const users = {username: req.body.username};
   //////NOTE/////
