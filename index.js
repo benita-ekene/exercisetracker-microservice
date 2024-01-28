@@ -32,10 +32,11 @@ app.get('/', (req, res) => {
 app.post("/api/users", async (req, res) => {
   const users = {username: req.body.username};
   //////NOTE/////
-  /////whatever variable that is passed through the model dot mongoose-method mus conform to the blue print of the model created.
+  /////whatever variable that is passed through the model dot mongoose-method mus conform to the blue print of the model created.////////////////////////////
   //example: "users" is an object because the model(blue print) is of type object
   const newUser = await User.create(users);
-  res.json({ username: newUser});
+  //////////////newUser.username, newUser,_id, newUse._v can be used to access the different variables attached to newUser//////////////////////
+  res.json([newUser.username, newUser._id]);
   
 });
 
