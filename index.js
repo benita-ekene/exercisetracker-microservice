@@ -29,6 +29,35 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
+
+
+
+app.post("/api/users/:_id/exercises", async (req, res) => {
+  const userId = req.params._Id
+  const exercises = {
+  userId: userId,
+  description: req.body.description,
+  duration: req.body.duration,
+  }
+  if(req.body.date = " ") {
+    exercises.date = req.body.date
+  }
+  const newExercise = await Exercise.create(exercises)
+  Exercise.findById(userId, (err, userfound) => {
+    if(err) {
+      res.json({Error: "User Id not found"})
+    }
+    res.json({
+    _id: userfound._id,
+    username: userfound.username,
+    description: newExercise.description,
+    duration: newExercise.duration,
+    date: newExercise.date.toDateString()
+  })
+  })
+  res.json(newExercise)
+})
+
 app.get("/api/users", async (req, res) => {
 const allUsers = await User.find({})
 res.json(allUsers)
