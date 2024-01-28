@@ -29,13 +29,15 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
-
-app.post("/api/users", (req, res) => {
-  const user = req.body.username
-  const newUser = User.create(user)
-  console.log(newUser)
-  res.json({user: newUser},)
-})
+app.post("/api/users", async (req, res) => {
+  const users = {username: req.body.username};
+  //////NOTE/////
+  /////whatever variable that is passed through the model dot mongoose-method mus conform to the blue print of the model created.
+  //example: "users" is an object because the model(blue print) is of type object
+  const newUser = await User.create(users);
+  res.json({ username: newUser});
+  
+});
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
