@@ -2,7 +2,7 @@ const { Schema, model }  = require("mongoose");
 
 const UserSchema = new Schema({
   username: {type: String, required: true}, 
-  timestamps: { type: Date, default: Date.now },
+  // timestamps: { type: Date, default: Date.now },
 })
 
 // const UserSchema = new Schema({
