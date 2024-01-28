@@ -50,31 +50,68 @@ app.get("/api/users", async (req, res) => {
   })
 
 
+// app.post("/api/users/:_id/exercises", async (req, res) => {
+//   const userId = req.params._Id
+//   const exercises = {
+//   userId: userId,
+//   description: req.body.description,
+//   duration: req.body.duration,
+//   }
+//   if(req.body.date = " ") {
+//     exercises.date = req.body.date
+//   }
+//   const newExercise = await Exercise.create(exercises)
+//   Exercise.findById(userId, (err, userfound) => {
+//     if(err) {
+//       res.json({Error: "User Id not found"})
+//     }
+//     res.json({
+//     _id: userfound._id,
+//     username: userfound.username,
+//     description: newExercise.description,
+//     duration: newExercise.duration,
+//     date: newExercise.date.toDateString()
+//   })
+//   })
+//   res.json(newExercise)
+// })
+
+
+
 app.post("/api/users/:_id/exercises", async (req, res) => {
-  const userId = req.params._Id
+  const userId = req.params._id; // Use lowercase _id
   const exercises = {
-  userId: userId,
-  description: req.body.description,
-  duration: req.body.duration,
+    userId: userId,
+    description: req.body.description,
+    duration: req.body.duration,
+  };
+  
+  if (req.body.date) { // Use a truthy check for date
+    exercises.date = req.body.date;
   }
-  if(req.body.date = " ") {
-    exercises.date = req.body.date
-  }
-  const newExercise = await Exercise.create(exercises)
-  Exercise.findById(userId, (err, userfound) => {
-    if(err) {
-      res.json({Error: "User Id not found"})
+  
+  try {
+    const newExercise = await Exercise.create(exercises);
+    
+    // Find the user by userId
+    const userfound = await Exercise.findById(userId);
+
+    if (!userfound) {
+      return res.status(404).json({ error: "User not found" });
     }
+
     res.json({
-    _id: userfound._id,
-    username: userfound.username,
-    description: newExercise.description,
-    duration: newExercise.duration,
-    date: newExercise.date.toDateString()
-  })
-  })
-  res.json(newExercise)
-})
+      _id: userfound._id,
+      username: userfound.username, // Assuming your Exercise model has a username field
+      description: newExercise.description,
+      duration: newExercise.duration,
+      date: newExercise.date ? newExercise.date.toDateString() : null, // Check if date exists before formatting
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 
 
