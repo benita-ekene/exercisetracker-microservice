@@ -79,7 +79,7 @@ app.get("/api/users", async (req, res) => {
 
 
 app.post("/api/users/:_id/exercises", async (req, res) => {
-  const userId = new mongoose.Types.ObjectId(req.params._id);
+  const userId = (req.params._id);
   const exercises = {
     userId: userId,
     description: req.body.description,
@@ -96,17 +96,18 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     const newExercise = await Exercise.create(exercises);
 
     // Find and update the user with the new exercise
-    const updatedUser = await Exercise.findByIdAndUpdate(
-      userId,
-      { $push: { exercises: newExercise._id } }, // Assuming you have a field 'exercises' in your user model
-      { new: true, useFindAndModify: false }
-    );
+    const updatedUser = await Exercise.findById(userId);
 
     if (!updatedUser) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.json(updatedUser); // Returning the updated user object
+    res.json({
+      username: username,
+      updatedUser: updatedUser,
+      description: req.body.description,
+    duration: req.body.duration,
+    }); // Returning the updated user object
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
