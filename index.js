@@ -79,7 +79,7 @@ app.get("/api/users", async (req, res) => {
 
 
 app.post("/api/users/:_id/exercises", async (req, res) => {
-  const userId = mongoose.Types.ObjectId(req.params._id);
+  const userId = new mongoose.Types.ObjectId(req.params._id);
   const exercises = {
     userId: userId,
     description: req.body.description,
@@ -113,7 +113,6 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 
 
