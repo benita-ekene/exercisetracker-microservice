@@ -96,7 +96,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     const newExercise = await Exercise.create(exercises);
     
     // Find and update the user with the new exercise
-    const updatedUser = await Exercise.findById(userId, (userfound) => {
+    const updatedUser = await Exercise.findById(userId, userfound)
       if (userfound) {
         newExercise.save()
         // return res.status(404).json({ error: "User not found" });
@@ -109,15 +109,11 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
       date: newExercise.date.toDateString() 
       }); // Returning the updated user object
       }
-   
-    });
 
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-});
-
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
