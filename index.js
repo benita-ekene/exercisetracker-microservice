@@ -95,19 +95,18 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   try {
     const newExercise = await Exercise.create(exercises);
 
-    const userfound = await Exercise.findById(userId);
+    // Find and update the user with the new exercise
+    const updatedUser = await Exercise.findByIdAndUpdate(
+      userId,
+      { $push: { exercises: newExercise._id } }, // Assuming you have a field 'exercises' in your user model
+      { new: true, useFindAndModify: false }
+    );
 
-    if (!userfound) {
+    if (!updatedUser) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.json({
-      _id: userfound._id,
-      username: userfound.username,
-      description: newExercise.description,
-      duration: newExercise.duration,
-      date: newExercise.date.toDateString(),
-    });
+    res.json(updatedUser); // Returning the updated user object
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
