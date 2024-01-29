@@ -79,7 +79,7 @@ app.get("/api/users", async (req, res) => {
 
 
 app.post("/api/users/:_id/exercises", async (req, res) => {
-  const userId = req.params._id;
+  const userId = mongoose.Types.ObjectId(req.params._id);
   const exercises = {
     userId: userId,
     description: req.body.description,
@@ -88,6 +88,8 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 
   if (req.body.date) {
     exercises.date = req.body.date;
+  } else {
+    exercises.date = new Date();
   }
 
   try {
@@ -104,13 +106,14 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
       username: userfound.username,
       description: newExercise.description,
       duration: newExercise.duration,
-      date: newExercise.date ? newExercise.date.toDateString() : null,
+      date: newExercise.date.toDateString(),
     });
   } catch (error) {
-    console.error(error); // Log the error for debugging purposes
+    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 
 
