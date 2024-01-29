@@ -94,7 +94,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 
   try {
     const newExercise = await Exercise.create(exercises);
-
+    newExercise.save()
     // Find and update the user with the new exercise
     const updatedUser = await Exercise.findById(userId);
 
