@@ -79,21 +79,20 @@ app.get("/api/users", async (req, res) => {
 
 
 app.post("/api/users/:_id/exercises", async (req, res) => {
-  const userId = req.params._id; // Use lowercase _id
+  const userId = req.params._id;
   const exercises = {
     userId: userId,
     description: req.body.description,
     duration: req.body.duration,
   };
-  
-  if (req.body.date) { // Use a truthy check for date
+
+  if (req.body.date) {
     exercises.date = req.body.date;
   }
-  
+
   try {
     const newExercise = await Exercise.create(exercises);
-    
-    // Find the user by userId
+
     const userfound = await Exercise.findById(userId);
 
     if (!userfound) {
@@ -102,16 +101,17 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 
     res.json({
       _id: userfound._id,
-      username: userfound.username, // Assuming your Exercise model has a username field
+      username: userfound.username,
       description: newExercise.description,
       duration: newExercise.duration,
-      date: newExercise.date ? newExercise.date.toDateString() : null, // Check if date exists before formatting
+      date: newExercise.date ? newExercise.date.toDateString() : null,
     });
   } catch (error) {
-    console.error(error);
+    console.error(error); // Log the error for debugging purposes
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 
 
