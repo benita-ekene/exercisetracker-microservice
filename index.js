@@ -106,7 +106,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
         username: userfound.username,
         description: newExercisedescription,
       duration: newExercise.duration,
-      date: newExercise.date toDateString() 
+      date: newExercise.date.toDateString() 
       }); // Returning the updated user object
       }
    
