@@ -86,7 +86,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     duration: req.body.duration,
   };
 
-  if (req.body.date) {
+  if (req.body.date != " ") {
     exercises.date = req.body.date;
   } else {
     exercises.date = new Date();
@@ -94,27 +94,29 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 
   try {
     const newExercise = await Exercise.create(exercises);
-    newExercise.save()
+    
     // Find and update the user with the new exercise
-    const updatedUser = await Exercise.findById(userId);
+    const updatedUser = await Exercise.findById(userId, (userfound) => {
+      if (userfound) {
+        newExercise.save()
+        // return res.status(404).json({ error: "User not found" });
+        
+      res.json({
+        _id: userfound._id,
+        username: userfound.username,
+        description: newExercisedescription,
+      duration: newExercise.duration,
+      date: newExercise.date toDateString() 
+      }); // Returning the updated user object
+      }
+   
+    });
 
-    if (!updatedUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    res.json({
-      username: username,
-      updatedUser: updatedUser,
-      description: req.body.description,
-    duration: req.body.duration,
-    }); // Returning the updated user object
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
