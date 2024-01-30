@@ -51,31 +51,47 @@ app.get("/api/users", async (req, res) => {
 
 
 // app.post("/api/users/:_id/exercises", async (req, res) => {
-//   const userId = req.params._Id
+//   const userId = req.params._id;
 //   const exercises = {
-//   userId: userId,
-//   description: req.body.description,
-//   duration: req.body.duration,
-//   }
-//   if(req.body.date = " ") {
-//     exercises.date = req.body.date
-//   }
-//   const newExercise = await Exercise.create(exercises)
-//   Exercise.findById(userId, (err, userfound) => {
-//     if(err) {
-//       res.json({Error: "User Id not found"})
-//     }
-//     res.json({
-//     _id: userfound._id,
-//     username: userfound.username,
-//     description: newExercise.description,
-//     duration: newExercise.duration,
-//     date: newExercise.date.toDateString()
-//   })
-//   })
-//   res.json(newExercise)
-// })
+//     userId: userId,
+//     description: req.body.description,
+//     duration: req.body.duration,
+//   };
 
+//   if (req.body.date == " ") {
+//     exercises.date = new Date();
+//   } else {
+//     exercises.date = req.body.date;
+//   }
+
+//   try {
+//     const newExercise = await Exercise.create(exercises);
+
+//     // Find and update the user with the new exercise
+//     const userfound = await User.findById(userId);
+//     if (!userfound) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+
+//     // Add the reference to the new exercise in the user's exercises array
+//     // userfound.exercises.push(newExercise);
+//     await userfound.save();
+
+//     const exeOData = {
+//       _id: userfound._id,
+//       username: userfound.username,
+//       description: newExercise.description,
+//       duration: newExercise.duration,
+//       date: newExercise.date.toDateString(),
+//     };
+
+//     res.json(exeOData);
+
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 app.post("/api/users/:_id/exercises", async (req, res) => {
   const userId = req.params._id;
   const exercises = {
@@ -99,8 +115,8 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Add the reference to the new exercise in the user's exercises array
-    // userfound.exercises.push(newExercise);
+    // Assign the new exercise directly to the user's exercises property
+    userfound.exercises = newExercise;
     await userfound.save();
 
     const exeOData = {
@@ -108,7 +124,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
       username: userfound.username,
       description: newExercise.description,
       duration: newExercise.duration,
-      date: newExercise.date.toDateString(),
+      date: newExercise.date ? newExercise.date.toDateString() : null,
     };
 
     res.json(exeOData);
@@ -118,6 +134,30 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+
+app.get("GET /api/users/:_id/logs", (req, res) => {
+let username = userfound.username
+let resObj = {
+  username: userfound.username,
+  _id: userfound._id
+}
+Exercise.find({userId: userId}, (err, exercise) => {
+  if(err) {
+    res.json(err)
+  }
+  exercise = exercise.map(x => {
+    return {
+      description: x.description,
+      duration: x.duration,
+      date: x.Date.toDateString
+    }
+  })
+})
+resObj.log = exercise
+resObj.count = exercise.length
+res.json(resObj)
+})
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
