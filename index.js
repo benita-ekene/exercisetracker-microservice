@@ -136,28 +136,40 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 });
 
 
-app.get("/api/users/:_id/logs", (req, res) => {
-let username = userfound.username
-let resObj = {
-  username: username,
-  _id: userfound._id
-}
-Exercise.find({userId: userId}, (err, exercise) => {
-  if(err) {
-    res.json(err)
-  }
-  exercise = exercise.map(x => {
-    return {
-      description: x.description,
-      duration: x.duration,
-      date: x.Date.toDateString
+app.get("/api/users/:_id/logs", async (req, res) => {
+  const userId = req.params._id;
+
+  try {
+    const userfound = await User.findById(userId);
+    if (!userfound) {
+      return res.status(404).json({ error: "User not found" });
     }
-  })
-})
-resObj.log = exercise
-resObj.count = exercise.length
-res.json(resObj)
-})
+
+    let resObj = {
+      username: userfound.username,
+      _id: userfound._id,
+    };
+
+    Exercise.find({ userId: userId }, (err, exercises) => {
+      if (err) {
+        return res.json(err);
+      }
+
+      resObj.log = exercises.map((x) => ({
+        description: x.description,
+        duration: x.duration,
+        date: x.date.toDateString(), // Corrected toDateString() method
+      }));
+
+      resObj.count = exercises.length;
+      res.json(resObj);
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
