@@ -100,7 +100,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     }
 
     // Add the reference to the new exercise in the user's exercises array
-    userfound.exercises.push(newExercise);
+    // userfound.exercises.push(newExercise);
     await userfound.save();
 
     const exeOData = {
