@@ -76,7 +76,6 @@ app.get("/api/users", async (req, res) => {
 //   res.json(newExercise)
 // })
 
-
 app.post("/api/users/:_id/exercises", async (req, res) => {
   const userId = req.params._id;
   const exercises = {
@@ -85,7 +84,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     duration: req.body.duration,
   };
 
-  if (req.body.date === " ") { // Use strict inequality to check for non-empty date
+  if (req.body.date === " ") {
     exercises.date = new Date();
   } else {
     exercises.date = req.body.date;
@@ -99,25 +98,26 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     if (!userfound) {
       return res.status(404).json({ error: "User not found" });
     }
-    const exeOData =  {
+
+    // Add the reference to the new exercise in the user's exercises array
+    userfound.exercises.push(newExercise);
+    await userfound.save();
+
+    const exeOData = {
       _id: userfound._id,
       username: userfound.username,
       description: newExercise.description,
       duration: newExercise.duration,
       date: newExercise.date.toDateString(),
-    }
-    // Add the reference to the new exercise in the user's exercises array (if applicable)
-    
-    await exeOData.save();
-  
-    res.json(exeOData); // Returning the updated user object
+    };
+
+    res.json(exeOData);
 
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
