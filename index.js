@@ -107,7 +107,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
       date: newExercise.date.toDateString(),
     }
     // Add the reference to the new exercise in the user's exercises array (if applicable)
-    u
+    
     await exeOData.save();
   
     res.json(exeOData); // Returning the updated user object
