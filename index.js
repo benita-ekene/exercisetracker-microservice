@@ -136,7 +136,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 });
 
 
-app.get("GET /api/users/:_id/logs", (req, res) => {
+app.get("/api/users/:_id/logs", (req, res) => {
 let username = userfound.username
 let resObj = {
   username: userfound.username,
