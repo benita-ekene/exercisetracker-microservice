@@ -96,22 +96,21 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 
     // Find and update the user with the new exercise
     const userfound = await User.findById(userId);
-
     if (!userfound) {
       return res.status(404).json({ error: "User not found" });
     }
-
-    // Add the reference to the new exercise in the user's exercises array (if applicable)
-    userfound.push(exercises);
-    await userfound.save();
-  
-    res.json({
+    const exeOData =  {
       _id: userfound._id,
       username: userfound.username,
       description: newExercise.description,
       duration: newExercise.duration,
       date: newExercise.date.toDateString(),
-    }); // Returning the updated user object
+    }
+    // Add the reference to the new exercise in the user's exercises array (if applicable)
+    u
+    await exeOData.save();
+  
+    res.json(exeOData); // Returning the updated user object
 
   } catch (error) {
     console.error(error);
