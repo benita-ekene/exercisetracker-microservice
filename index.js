@@ -171,9 +171,11 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 // });
 
 
-
 app.get("/api/users/:_id/logs", async (req, res) => {
   const userId = req.params._id;
+  const fromDate = req.query.from;
+  const toDate = req.query.to;
+  const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
 
   try {
     const userfound = await User.findById(userId);
@@ -186,7 +188,17 @@ app.get("/api/users/:_id/logs", async (req, res) => {
       _id: userfound._id,
     };
 
-    const exercises = await Exercise.find({ userId: userId }).exec();
+    // Construct the query based on the parameters
+    const query = { userId: userId };
+    if (fromDate) query.date = { $gte: new Date(fromDate) };
+    if (toDate) query.date = { ...query.date, $lte: new Date(toDate) };
+
+    let exercisesQuery = Exercise.find(query);
+
+    // Apply limit if provided
+    if (limit) exercisesQuery = exercisesQuery.limit(limit);
+
+    const exercises = await exercisesQuery.exec();
 
     resObj.log = exercises.map((x) => ({
       description: x.description,
@@ -201,6 +213,39 @@ app.get("/api/users/:_id/logs", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+
+
+
+// app.get("/api/users/:_id/logs", async (req, res) => {
+//   const userId = req.params._id;
+
+//   try {
+//     const userfound = await User.findById(userId);
+//     if (!userfound) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+
+//     let resObj = {
+//       username: userfound.username,
+//       _id: userfound._id,
+//     };
+
+//     const exercises = await Exercise.find({ userId: userId }).exec();
+
+//     resObj.log = exercises.map((x) => ({
+//       description: x.description,
+//       duration: x.duration,
+//       date: x.date.toDateString(),
+//     }));
+
+//     resObj.count = exercises.length;
+//     res.json(resObj);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
