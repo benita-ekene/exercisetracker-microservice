@@ -85,10 +85,10 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     duration: req.body.duration,
   };
 
-  if (req.body.date !== " ") { // Use strict inequality to check for non-empty date
-    exercises.date = req.body.date;
-  } else {
+  if (req.body.date === " ") { // Use strict inequality to check for non-empty date
     exercises.date = new Date();
+  } else {
+    exercises.date = req.body.date;
   }
 
   try {
@@ -102,6 +102,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     }
 
     // Add the reference to the new exercise in the user's exercises array (if applicable)
+    userfound.push(exercises);
     await userfound.save();
   
     res.json({
