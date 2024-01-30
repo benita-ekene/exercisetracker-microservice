@@ -155,13 +155,13 @@ app.get("/api/users/:_id/logs", async (req, res) => {
         return res.json(err);
       }
       let exercise
-      resObj.log = exercises.map((x) => ({
+      resObj.log = exercise.map((x) => ({
         description: x.description,
         duration: x.duration,
         date: x.date.toDateString(), // Corrected toDateString() method
       }));
 
-      resObj.count = exercises.length;
+      resObj.count = exercise.length;
       res.json(resObj);
     
   } catch (error) {
