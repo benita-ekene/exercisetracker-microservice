@@ -150,11 +150,11 @@ app.get("/api/users/:_id/logs", async (req, res) => {
       _id: userfound._id,
     };
 
-    Exercise.find({ userId: userId }, (err, exercises) => {
-      if (err) {
+    Exercise.find(userId)
+      if (!userId) {
         return res.json(err);
       }
-
+      let exercise
       resObj.log = exercises.map((x) => ({
         description: x.description,
         duration: x.duration,
@@ -163,7 +163,7 @@ app.get("/api/users/:_id/logs", async (req, res) => {
 
       resObj.count = exercises.length;
       res.json(resObj);
-    });
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
