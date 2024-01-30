@@ -102,9 +102,8 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     }
 
     // Add the reference to the new exercise in the user's exercises array (if applicable)
-    userfound.exercises.push(newExercise._id);
     await userfound.save();
-
+  
     res.json({
       _id: userfound._id,
       username: userfound.username,
