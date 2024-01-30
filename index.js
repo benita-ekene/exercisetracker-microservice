@@ -139,7 +139,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 app.get("/api/users/:_id/logs", (req, res) => {
 let username = userfound.username
 let resObj = {
-  username: userfound.username,
+  username: username,
   _id: userfound._id
 }
 Exercise.find({userId: userId}, (err, exercise) => {
