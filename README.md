@@ -1,3 +1,6 @@
 # Exercise Tracker
 
-This is the boilerplate for the Exercise Tracker project. Instructions for building your project can be found at https://www.freecodecamp.org/learn/apis-and-microservices/apis-and-microservices-projects/exercise-tracker
+
+Introducing our "Exercise Tracker" – a cutting-edge fitness companion that revolutionizes your workout experience. Monitor activities, track real-time metrics, and receive personalized training plans. Embrace the future of fitness with our Exercise Tracker!
+
+This is the exercise page:  https://exercisetracker-microservice.onrender.com/
